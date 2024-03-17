@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.fvehicles.mapper.FvehGarageVehicleMapper">
+
+    <resultMap type="FvehGarageVehicle" id="FvehGarageVehicleResult">
+        <result property="associationId"    column="association_id"    />
+        <result property="garageId"    column="garage_id"    />
+        <result property="vehicleId"    column="vehicle_id"    />
+        <result property="ownerId"    column="owner_id"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+    </resultMap>
+
+    <sql id="selectFvehGarageVehicleVo">
+        select association_id, garage_id, vehicle_id, owner_id, start_time, end_time from fveh_garage_vehicle
+    </sql>
+
+    <select id="selectFvehGarageVehicleList" parameterType="FvehGarageVehicle" resultMap="FvehGarageVehicleResult">
+        <include refid="selectFvehGarageVehicleVo"/>
+        <where>
+            <if test="garageId != null "> and garage_id = #{garageId}</if>
+            <if test="vehicleId != null "> and vehicle_id = #{vehicleId}</if>
+            <if test="ownerId != null "> and owner_id = #{ownerId}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+        </where>
+    </select>
+
+    <select id="selectFvehGarageVehicleByAssociationId" parameterType="Long" resultMap="FvehGarageVehicleResult">
+        <include refid="selectFvehGarageVehicleVo"/>
+        where association_id = #{associationId}
+    </select>
+
+    <insert id="insertFvehGarageVehicle" parameterType="FvehGarageVehicle" useGeneratedKeys="true" keyProperty="associationId">
+        insert into fveh_garage_vehicle
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="garageId != null">garage_id,</if>
+            <if test="vehicleId != null">vehicle_id,</if>
+            <if test="ownerId != null">owner_id,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="garageId != null">#{garageId},</if>
+            <if test="vehicleId != null">#{vehicleId},</if>
+            <if test="ownerId != null">#{ownerId},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFvehGarageVehicle" parameterType="FvehGarageVehicle">
+        update fveh_garage_vehicle
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="garageId != null">garage_id = #{garageId},</if>
+            <if test="vehicleId != null">vehicle_id = #{vehicleId},</if>
+            <if test="ownerId != null">owner_id = #{ownerId},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+        </trim>
+        where association_id = #{associationId}
+    </update>
+
+    <delete id="deleteFvehGarageVehicleByAssociationId" parameterType="Long">
+        delete from fveh_garage_vehicle where association_id = #{associationId}
+    </delete>
+
+    <delete id="deleteFvehGarageVehicleByAssociationIds" parameterType="String">
+        delete from fveh_garage_vehicle where association_id in
+        <foreach item="associationId" collection="array" open="(" separator="," close=")">
+            #{associationId}
+        </foreach>
+    </delete>
+
+    <!-- 根据车辆id删除车库-车辆关联 -->
+    <delete id="deleteByVehicleId" parameterType="java.lang.Integer">
+        DELETE FROM fveh_garage_vehicle WHERE vehicle_id = #{vehicleId}
+    </delete>
+
+</mapper>

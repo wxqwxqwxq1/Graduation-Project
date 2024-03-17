@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.fvehicles.mapper.FvehVehicleMapper">
+
+    <resultMap type="FvehVehicle" id="FvehVehicleResult">
+        <result property="vehicleId"    column="vehicle_id"    />
+        <result property="licensePlate"    column="license_plate"    />
+        <result property="vehicleType"    column="vehicle_type"    />
+        <result property="vehicleModel"    column="vehicle_model"    />
+        <result property="vehicleColor"    column="vehicle_color"    />
+        <result property="vehiclePermit"    column="vehicle_permit"    />
+        <result property="ownerId"    column="owner_id"    />
+    </resultMap>
+
+    <sql id="selectFvehVehicleVo">
+        select vehicle_id, license_plate, vehicle_type, vehicle_model, vehicle_color, vehicle_permit, owner_id from fveh_vehicle
+    </sql>
+
+    <select id="selectFvehVehicleList" parameterType="FvehVehicle" resultMap="FvehVehicleResult">
+        <include refid="selectFvehVehicleVo"/>
+        <where>
+            <if test="vehicleId != null "> and vehicle_id = #{vehicleId}</if>
+            <if test="licensePlate != null  and licensePlate != ''"> and license_plate = #{licensePlate}</if>
+            <if test="vehicleType != null  and vehicleType != ''"> and vehicle_type = #{vehicleType}</if>
+            <if test="vehicleModel != null  and vehicleModel != ''"> and vehicle_model = #{vehicleModel}</if>
+            <if test="vehicleColor != null  and vehicleColor != ''"> and vehicle_color = #{vehicleColor}</if>
+            <if test="vehiclePermit != null "> and vehicle_permit = #{vehiclePermit}</if>
+            <if test="ownerId != null "> and owner_id = #{ownerId}</if>
+        </where>
+    </select>
+
+    <select id="selectFvehVehicleByVehicleId" parameterType="Long" resultMap="FvehVehicleResult">
+        <include refid="selectFvehVehicleVo"/>
+        where vehicle_id = #{vehicleId}
+    </select>
+
+    <insert id="insertFvehVehicle" parameterType="FvehVehicle" useGeneratedKeys="true" keyProperty="vehicleId">
+        insert into fveh_vehicle
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="licensePlate != null and licensePlate != ''">license_plate,</if>
+            <if test="vehicleType != null">vehicle_type,</if>
+            <if test="vehicleModel != null">vehicle_model,</if>
+            <if test="vehicleColor != null">vehicle_color,</if>
+            <if test="vehiclePermit != null">vehicle_permit,</if>
+            <if test="ownerId != null">owner_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="licensePlate != null and licensePlate != ''">#{licensePlate},</if>
+            <if test="vehicleType != null">#{vehicleType},</if>
+            <if test="vehicleModel != null">#{vehicleModel},</if>
+            <if test="vehicleColor != null">#{vehicleColor},</if>
+            <if test="vehiclePermit != null">#{vehiclePermit},</if>
+            <if test="ownerId != null">#{ownerId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFvehVehicle" parameterType="FvehVehicle">
+        update fveh_vehicle
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="licensePlate != null and licensePlate != ''">license_plate = #{licensePlate},</if>
+            <if test="vehicleType != null">vehicle_type = #{vehicleType},</if>
+            <if test="vehicleModel != null">vehicle_model = #{vehicleModel},</if>
+            <if test="vehicleColor != null">vehicle_color = #{vehicleColor},</if>
+            <if test="vehiclePermit != null">vehicle_permit = #{vehiclePermit},</if>
+            <if test="ownerId != null">owner_id = #{ownerId},</if>
+        </trim>
+        where vehicle_id = #{vehicleId}
+    </update>
+
+    <delete id="deleteFvehVehicleByVehicleId" parameterType="Long">
+        delete from fveh_vehicle where vehicle_id = #{vehicleId}
+    </delete>
+
+    <delete id="deleteFvehVehicleByOwnerId" parameterType="Long">
+        delete from fveh_vehicle where owner_id = #{ownerId}
+    </delete>
+
+    <delete id="deleteFvehVehicleByVehicleIds" parameterType="String">
+        delete from fveh_vehicle where vehicle_id in
+        <foreach item="vehicleId" collection="array" open="(" separator="," close=")">
+            #{vehicleId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.manage.mapper.ManageGarageMapper">
+
+    <resultMap type="ManageGarage" id="ManageGarageResult">
+        <result property="garageId"    column="garage_id"    />
+        <result property="location"    column="location"    />
+        <result property="totalCapacity"    column="total_capacity"    />
+        <result property="type"    column="type"    />
+        <result property="isAvailable"    column="is_available"    />
+        <result property="remainingCapacity"    column="remaining_capacity"    />
+    </resultMap>
+
+    <sql id="selectManageGarageVo">
+        select garage_id, location, total_capacity, type, is_available, remaining_capacity from manage_garage
+    </sql>
+
+    <select id="selectManageGarageList" parameterType="ManageGarage" resultMap="ManageGarageResult">
+        <include refid="selectManageGarageVo"/>
+        <where>
+            <if test="garageId != null "> and garage_id = #{garageId}</if>
+            <if test="location != null  and location != ''"> and location like concat('%', #{location}, '%') </if>
+            <if test="totalCapacity != null "> and total_capacity = #{totalCapacity}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="isAvailable != null "> and is_available = #{isAvailable}</if>
+            <if test="remainingCapacity != null "> and remaining_capacity = #{remainingCapacity}</if>
+        </where>
+    </select>
+
+    <select id="selectManageGarageByGarageId" parameterType="Long" resultMap="ManageGarageResult">
+        <include refid="selectManageGarageVo"/>
+        where garage_id = #{garageId}
+    </select>
+
+    <insert id="insertManageGarage" parameterType="ManageGarage" useGeneratedKeys="true" keyProperty="garageId">
+        insert into manage_garage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="location != null and location != ''">location,</if>
+            <if test="totalCapacity != null">total_capacity,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="isAvailable != null">is_available,</if>
+            <if test="remainingCapacity != null">remaining_capacity,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="location != null and location != ''">#{location},</if>
+            <if test="totalCapacity != null">#{totalCapacity},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="isAvailable != null">#{isAvailable},</if>
+            <if test="remainingCapacity != null">#{remainingCapacity},</if>
+        </trim>
+    </insert>
+
+    <update id="updateManageGarage" parameterType="ManageGarage">
+        update manage_garage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="location != null and location != ''">location = #{location},</if>
+            <if test="totalCapacity != null">total_capacity = #{totalCapacity},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="isAvailable != null">is_available = #{isAvailable},</if>
+            <if test="remainingCapacity != null">remaining_capacity = #{remainingCapacity},</if>
+        </trim>
+        where garage_id = #{garageId}
+    </update>
+
+    <delete id="deleteManageGarageByGarageId" parameterType="Long">
+        delete from manage_garage where garage_id = #{garageId}
+    </delete>
+
+    <delete id="deleteManageGarageByGarageIds" parameterType="String">
+        delete from manage_garage where garage_id in
+        <foreach item="garageId" collection="array" open="(" separator="," close=")">
+            #{garageId}
+        </foreach>
+    </delete>
+
+    <!-- 更新车库余量 -->
+    <update id="increaseRemainingCapacity" parameterType="java.lang.Integer">
+        UPDATE manage_garage
+        SET remaining_capacity = remaining_capacity + 1
+        WHERE garage_id = #{garageId}
+    </update>
+
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.fvehicles.mapper.FvehOwnerMapper">
+
+    <resultMap type="FvehOwner" id="FvehOwnerResult">
+        <result property="ownerId"    column="owner_id"    />
+        <result property="ownerName"    column="owner_name"    />
+        <result property="ownerIdCard"    column="owner_id_card"    />
+        <result property="ownerPhone"    column="owner_phone"    />
+        <result property="ownerAddress"    column="owner_address"    />
+        <result property="drivingLicenseNumber"    column="driving_license_number"    />
+        <result property="parkingSpaces"    column="parking_spaces"    />
+        <result property="usedSpaces"    column="used_spaces"    />
+        <result property="remainSpaces"    column="remain_spaces"    />
+    </resultMap>
+
+    <!-- 根据身份证号查询用户 -->
+    <select id="selectFvehOwnerByOwnerIdCard" parameterType="String" resultMap="FvehOwnerResult">
+        SELECT * FROM fveh_owner WHERE owner_id_card = #{ownerIdCard}
+    </select>
+
+    <sql id="selectFvehOwnerVo">
+        select owner_id, owner_name, owner_id_card, owner_phone, owner_address, driving_license_number, parking_spaces, used_spaces, remain_spaces from fveh_owner
+    </sql>
+
+    <select id="selectFvehOwnerList" parameterType="FvehOwner" resultMap="FvehOwnerResult">
+        <include refid="selectFvehOwnerVo"/>
+        <where>
+            <if test="ownerId != null  and ownerId != ''"> and owner_id = #{ownerId}</if>
+            <if test="ownerName != null  and ownerName != ''"> and owner_name like concat('%', #{ownerName}, '%')</if>
+            <if test="ownerIdCard != null  and ownerIdCard != ''"> and owner_id_card = #{ownerIdCard}</if>
+            <if test="ownerPhone != null  and ownerPhone != ''"> and owner_phone = #{ownerPhone}</if>
+            <if test="drivingLicenseNumber != null  and drivingLicenseNumber != ''"> and driving_license_number = #{drivingLicenseNumber}</if>
+            <if test="parkingSpaces != null "> and parking_spaces = #{parkingSpaces}</if>
+            <if test="usedSpaces != null "> and used_spaces = #{usedSpaces}</if>
+            <if test="remainSpaces != null "> and remain_spaces = #{remainSpaces}</if>
+        </where>
+    </select>
+
+<!--    selectFvehOwnerByOwnerIdCardLike，根据编号模糊查询-->
+    <select id="selectFvehOwnerByOwnerIdCardLike" parameterType="Long" resultMap="FvehOwnerResult">
+        <include refid="selectFvehOwnerVo"/>
+        where owner_id like concat('%', #{ownerIdCard}, '%')
+    </select>
+
+    <select id="selectFvehOwnerByOwnerId" parameterType="Long" resultMap="FvehOwnerResult">
+        <include refid="selectFvehOwnerVo"/>
+        where owner_id = #{ownerId}
+    </select>
+
+    <insert id="insertFvehOwner" parameterType="FvehOwner" useGeneratedKeys="true" keyProperty="ownerId">
+        insert into fveh_owner
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ownerName != null">owner_name,</if>
+            <if test="ownerIdCard != null">owner_id_card,</if>
+            <if test="ownerPhone != null">owner_phone,</if>
+            <if test="ownerAddress != null">owner_address,</if>
+            <if test="drivingLicenseNumber != null">driving_license_number,</if>
+            <if test="parkingSpaces != null">parking_spaces,</if>
+            <if test="usedSpaces != null">used_spaces,</if>
+            <if test="remainSpaces != null">remain_spaces,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ownerName != null">#{ownerName},</if>
+            <if test="ownerIdCard != null">#{ownerIdCard},</if>
+            <if test="ownerPhone != null">#{ownerPhone},</if>
+            <if test="ownerAddress != null">#{ownerAddress},</if>
+            <if test="drivingLicenseNumber != null">#{drivingLicenseNumber},</if>
+            <if test="parkingSpaces != null">#{parkingSpaces},</if>
+            <if test="usedSpaces != null">#{usedSpaces},</if>
+            <if test="remainSpaces != null">#{remainSpaces},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFvehOwner" parameterType="FvehOwner">
+        update fveh_owner
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ownerName != null">owner_name = #{ownerName},</if>
+            <if test="ownerIdCard != null">owner_id_card = #{ownerIdCard},</if>
+            <if test="ownerPhone != null">owner_phone = #{ownerPhone},</if>
+            <if test="ownerAddress != null">owner_address = #{ownerAddress},</if>
+            <if test="drivingLicenseNumber != null">driving_license_number = #{drivingLicenseNumber},</if>
+            <if test="parkingSpaces != null">parking_spaces = #{parkingSpaces},</if>
+            <if test="usedSpaces != null">used_spaces = #{usedSpaces},</if>
+            <if test="remainSpaces != null">remain_spaces = #{remainSpaces},</if>
+        </trim>
+        where owner_id = #{ownerId}
+    </update>
+
+
+    <delete id="deleteFvehOwnerByOwnerId" parameterType="Long">
+        delete from fveh_owner where owner_id = #{ownerId}
+    </delete>
+
+    <delete id="deleteFvehOwnerByOwnerIds" parameterType="String">
+        delete from fveh_owner where owner_id in
+        <foreach item="ownerId" collection="array" open="(" separator="," close=")">
+            #{ownerId}
+        </foreach>
+    </delete>
+</mapper>
