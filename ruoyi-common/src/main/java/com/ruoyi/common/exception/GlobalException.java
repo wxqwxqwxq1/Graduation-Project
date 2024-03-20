@@ -1,7 +1,6 @@
 package com.ruoyi.common.exception;
 
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.exception.fvehicles.UserException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
@@ -21,7 +20,7 @@ public class GlobalException extends RuntimeException
     /**
      * 错误明细，内部调试错误
      *
-     * 和 {@link CommonResult#getDetailMessage()} 一致的设计
+     * 和 {@link CommonResult #getDetailMessage()} 一致的设计
      */
     private String detailMessage;
 
@@ -60,12 +59,4 @@ public class GlobalException extends RuntimeException
         return this;
     }
 
-    /**
-     * 用户添加异常
-     */
-    @ExceptionHandler(UserException.class)
-    public AjaxResult loginException(UserException e)
-    {
-        return AjaxResult.error(e.getMessage());
-    }
 }

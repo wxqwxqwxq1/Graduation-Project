@@ -14,13 +14,14 @@
         <result property="ownerPhone"    column="owner_phone"    />
         <result property="garageLocation"    column="garage_location"    />
         <result property="garageId"    column="garage_id"    />
+        <result property="isAvailable"    column="is_available"    />
         <result property="garageType"    column="garage_type"    />
         <result property="startTime"    column="start_time"    />
         <result property="endTime"    column="end_time"    />
     </resultMap>
 
     <sql id="selectViewVehicleParkingInfoVo">
-        select association_id, license_plate, vehicle_model, vehicle_id, owner_name, owner_id, owner_phone, garage_location, garage_id, garage_type, start_time, end_time from view_vehicle_parking_info
+        select association_id, license_plate, vehicle_model, vehicle_id, owner_name, owner_id, owner_phone, garage_location, garage_id, is_available, garage_type, start_time, end_time from view_vehicle_parking_info
     </sql>
 
     <select id="selectViewVehicleParkingInfoList" parameterType="ViewVehicleParkingInfo" resultMap="ViewVehicleParkingInfoResult">
@@ -33,8 +34,9 @@
             <if test="ownerName != null  and ownerName != ''"> and owner_name like concat('%', #{ownerName}, '%')</if>
             <if test="ownerId != null "> and owner_id = #{ownerId}</if>
             <if test="ownerPhone != null  and ownerPhone != ''"> and owner_phone = #{ownerPhone}</if>
-            <if test="garageLocation != null  and garageLocation != ''"> and garage_location like concat('%', #{garageLocation}, '%')</if>
+            <if test="garageLocation != null  and garageLocation != ''"> and garage_location = #{garageLocation}</if>
             <if test="garageId != null "> and garage_id = #{garageId}</if>
+            <if test="isAvailable != null "> and is_available = #{isAvailable}</if>
             <if test="garageType != null  and garageType != ''"> and garage_type = #{garageType}</if>
             <if test="startTime != null "> and start_time = #{startTime}</if>
             <if test="endTime != null "> and end_time = #{endTime}</if>
@@ -58,6 +60,7 @@
             <if test="ownerPhone != null">owner_phone,</if>
             <if test="garageLocation != null">garage_location,</if>
             <if test="garageId != null">garage_id,</if>
+            <if test="isAvailable != null">is_available,</if>
             <if test="garageType != null and garageType != ''">garage_type,</if>
             <if test="startTime != null">start_time,</if>
             <if test="endTime != null">end_time,</if>
@@ -72,6 +75,7 @@
             <if test="ownerPhone != null">#{ownerPhone},</if>
             <if test="garageLocation != null">#{garageLocation},</if>
             <if test="garageId != null">#{garageId},</if>
+            <if test="isAvailable != null">#{isAvailable},</if>
             <if test="garageType != null and garageType != ''">#{garageType},</if>
             <if test="startTime != null">#{startTime},</if>
             <if test="endTime != null">#{endTime},</if>
@@ -89,6 +93,7 @@
             <if test="ownerPhone != null">owner_phone = #{ownerPhone},</if>
             <if test="garageLocation != null">garage_location = #{garageLocation},</if>
             <if test="garageId != null">garage_id = #{garageId},</if>
+            <if test="isAvailable != null">is_available = #{isAvailable},</if>
             <if test="garageType != null and garageType != ''">garage_type = #{garageType},</if>
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>

@@ -2,12 +2,13 @@ package com.ruoyi.fvehicles.mapper;
 
 import java.util.List;
 import com.ruoyi.fvehicles.domain.FvehGarageVehicle;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 车库-车辆关联Mapper接口
  *
- * @author ruoyi
- * @date 2024-03-12
+ * @author wxq
+ * @date 2024-03-17
  */
 public interface FvehGarageVehicleMapper
 {
@@ -59,13 +60,13 @@ public interface FvehGarageVehicleMapper
      */
     public int deleteFvehGarageVehicleByAssociationIds(Long[] associationIds);
 
-
     /**
-     * 根据车辆id删除车库-车辆关联
+     * 根据车辆编号更新车位状态
      *
-     * @param vehicleId 车辆id
+     * @param VehicleId 车辆编号
      * @return 结果
      */
-    void deleteByVehicleId(Integer vehicleId);
+    public int updateFvehGarageVehicleByVehicleId(@Param("vehicleId") Long VehicleId, @Param("isAvailable") int isAvailable);
 
 }
+

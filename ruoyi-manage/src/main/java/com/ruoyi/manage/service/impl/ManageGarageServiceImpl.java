@@ -40,7 +40,12 @@ public class ManageGarageServiceImpl implements IManageGarageService
     @Override
     public List<ManageGarage> selectManageGarageList(ManageGarage manageGarage)
     {
-        return manageGarageMapper.selectManageGarageList(manageGarage);
+//        对查询到的车库列表进行车位更新
+        List<ManageGarage> manageGarages = manageGarageMapper.selectManageGarageList(manageGarage);
+        for (ManageGarage garage : manageGarages) {
+            updateRemainingCapacity(garage.getGarageId());
+        }
+        return manageGarages;
     }
 
     /**
@@ -89,5 +94,10 @@ public class ManageGarageServiceImpl implements IManageGarageService
     public int deleteManageGarageByGarageId(Long garageId)
     {
         return manageGarageMapper.deleteManageGarageByGarageId(garageId);
+    }
+
+    @Override
+    public int updateRemainingCapacity(Long garageId) {
+        return manageGarageMapper.updateRemainingCapacity(garageId);
     }
 }

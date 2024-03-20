@@ -9,6 +9,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="车主编号" prop="ownerId">
+        <el-input
+          v-model="queryParams.ownerId"
+          placeholder="请输入车主编号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="车牌照" prop="licensePlate">
         <el-input
           v-model="queryParams.licensePlate"
@@ -41,14 +49,13 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="车辆许可" prop="vehiclePermit">
-        <el-input
-          v-model="queryParams.vehiclePermit"
-          placeholder="请输入车辆许可"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="车辆状态" prop="vehiclePermit">
+        <el-select v-model="queryParams.vehiclePermit" placeholder="请选择车辆状态" clearable @change="handleQuery">
+          <el-option label="允许" value="1"></el-option>
+          <el-option label="禁止" value="0"></el-option>
+        </el-select>
       </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -287,6 +294,10 @@ export default {
         console.log(`Vehicle ID changed from ${oldVehicleId} to ${newVehicleId}`);
         this.queryFvehicle = newVehicleId;
         this.showThisData();
+      },
+      $route(to, from) {
+        // 调用方法重新获取数据
+        this.getList();
       },
       immediate: true
     }

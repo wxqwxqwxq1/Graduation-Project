@@ -10,8 +10,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
 /**
  * 车库-车辆关联对象 fveh_garage_vehicle
  *
- * @author ruoyi
- * @date 2024-03-12
+ * @author wxq
+ * @date 2024-03-17
  */
 public class FvehGarageVehicle extends BaseEntity
 {
@@ -28,19 +28,23 @@ public class FvehGarageVehicle extends BaseEntity
     @Excel(name = "车辆ID")
     private Long vehicleId;
 
-    /** 车主id */
-    @Excel(name = "车主id")
+    /** 车主编号 */
+    @Excel(name = "车主编号")
     private Long ownerId;
 
-    /** start_time */
+    /** 开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "start_time", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date startTime;
 
-    /** end_time */
+    /** 结束时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "end_time", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date endTime;
+
+    /** 车位状态 */
+    @Excel(name = "车位状态")
+    private Integer isAvailable;
 
     public void setAssociationId(Long associationId)
     {
@@ -96,6 +100,15 @@ public class FvehGarageVehicle extends BaseEntity
     {
         return endTime;
     }
+    public void setIsAvailable(Integer isAvailable)
+    {
+        this.isAvailable = isAvailable;
+    }
+
+    public Integer getIsAvailable()
+    {
+        return isAvailable;
+    }
 
     @Override
     public String toString() {
@@ -106,6 +119,7 @@ public class FvehGarageVehicle extends BaseEntity
                 .append("ownerId", getOwnerId())
                 .append("startTime", getStartTime())
                 .append("endTime", getEndTime())
+                .append("isAvailable", getIsAvailable())
                 .toString();
     }
 }

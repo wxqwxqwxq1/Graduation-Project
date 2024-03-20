@@ -60,4 +60,5 @@ public interface FvehVehicleMapper
     public int deleteFvehVehicleByVehicleIds(Long[] vehicleIds);
 
     int deleteFvehVehicleByOwnerId(Long ownerId);
+
 }

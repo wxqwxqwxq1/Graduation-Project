@@ -36,9 +36,6 @@ public interface IFvehVehicleService
     public int insertFvehVehicle(FvehVehicle fvehVehicle);
 
 
-    //    剥离出这个方法----获取剩余车位并更新车位信息
-    Long getRemainSpaces(Long ownerId);
-
     /**
      * 修改车辆
      *
@@ -58,10 +55,23 @@ public interface IFvehVehicleService
     /**
      * 删除车辆信息
      *
-     * @param vehicleId 车辆主键
+     * @param  vehicleId 车辆主键
      * @return 结果
      */
     public int deleteFvehVehicleByOwnerId(Long ownerId);
 
     int deleteFvehVehicleByVehicleId(Long vehicleId);
+
+//    写一个方法，传入车主id，去车辆表中查询车辆个数，然后更新车主表的剩余车位和已用车位
+    /**
+     * 同步车位信息
+     *
+     * @param  ownerId 车辆主键
+     * @return 结果
+     */
+    public int syncFvehOwner(Long ownerId);
+
+    //    剥离出这个方法----获取剩余车位并更新车位信息
+    Long getRemainSpaces(Long ownerId);
+
 }

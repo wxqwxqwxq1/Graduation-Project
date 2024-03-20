@@ -7,7 +7,7 @@ import com.ruoyi.fvehicles.domain.ViewVehicleParkingInfo;
  * 车位Mapper接口
  *
  * @author wxq
- * @date 2024-03-11
+ * @date 2024-03-17
  */
 public interface ViewVehicleParkingInfoMapper
 {

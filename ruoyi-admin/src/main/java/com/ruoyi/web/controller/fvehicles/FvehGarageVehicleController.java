@@ -34,6 +34,7 @@ public class FvehGarageVehicleController extends BaseController
     @Autowired
     private IFvehGarageVehicleService fvehGarageVehicleService;
 
+
     /**
      * 查询车库-车辆关联列表
      */
@@ -77,7 +78,7 @@ public class FvehGarageVehicleController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody FvehGarageVehicle fvehGarageVehicle)
     {
-        System.out.println(fvehGarageVehicle.toString());
+//        System.out.println(fvehGarageVehicle.toString());
         return toAjax(fvehGarageVehicleService.insertFvehGarageVehicle(fvehGarageVehicle));
     }
 

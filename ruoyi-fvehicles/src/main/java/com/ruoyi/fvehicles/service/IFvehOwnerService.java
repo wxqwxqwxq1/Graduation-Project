@@ -25,8 +25,6 @@ public interface IFvehOwnerService
     //    更新全部车位信息
     void updateAllSpaces();
 
-    //    更新车位信息
-    void updateSpaces(Long ownerId);
 
     /**
      * 查询车主列表

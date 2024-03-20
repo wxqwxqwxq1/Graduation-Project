@@ -249,6 +249,10 @@ export default {
     //   调用方法使ownerId这一行高亮
       this.showThisData();
     },
+    $route(to, from) {
+      // 调用方法重新获取数据
+      this.getList();
+    },
     immediate: true
   },
   created() {
@@ -349,7 +353,8 @@ export default {
         if (valid) {
           if (this.form.ownerId != null) {
             updateOwner(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
+              console.log(response);
+              this.$modal.msgSuccess(response.msg || "修改成功");
               this.open = false;
               this.getList();
             });

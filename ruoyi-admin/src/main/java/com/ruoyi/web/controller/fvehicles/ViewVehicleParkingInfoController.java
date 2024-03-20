@@ -66,6 +66,7 @@ public class ViewVehicleParkingInfoController extends BaseController
     @GetMapping(value = "/{associationId}")
     public AjaxResult getInfo(@PathVariable("associationId") Long associationId)
     {
+//        System.out.println(viewVehicleParkingInfoService.selectViewVehicleParkingInfoByAssociationId(associationId));
         return success(viewVehicleParkingInfoService.selectViewVehicleParkingInfoByAssociationId(associationId));
     }
 

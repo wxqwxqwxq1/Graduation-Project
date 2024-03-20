@@ -58,4 +58,11 @@ public interface IManageGarageService
      * @return 结果
      */
     public int deleteManageGarageByGarageId(Long garageId);
+
+    /**
+     * 更新车库剩余容量
+     *
+     * @param garageId 车库ID
+     */
+    public int updateRemainingCapacity(Long garageId);
 }

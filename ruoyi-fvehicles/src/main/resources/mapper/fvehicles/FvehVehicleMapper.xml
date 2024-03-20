@@ -83,4 +83,6 @@
             #{vehicleId}
         </foreach>
     </delete>
+
+
 </mapper>

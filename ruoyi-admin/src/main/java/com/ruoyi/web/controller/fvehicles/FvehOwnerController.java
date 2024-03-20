@@ -4,7 +4,7 @@ package com.ruoyi.web.controller.fvehicles;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ruoyi.common.exception.fvehicles.UserException;
+import com.ruoyi.common.exception.GlobalException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +43,6 @@ public class FvehOwnerController extends BaseController
     public TableDataInfo list(FvehOwner fvehOwner)
     {
 //        System.out.println(fvehOwner.toString());
-        fvehOwnerService.updateAllSpaces();
         startPage();
         List<FvehOwner> list = fvehOwnerService.selectFvehOwnerList(fvehOwner);
         return getDataTable(list);
@@ -69,8 +68,6 @@ public class FvehOwnerController extends BaseController
     @GetMapping(value = "/{ownerId}")
     public AjaxResult getInfo(@PathVariable("ownerId") Long ownerId)
     {
-//        更新车位信息
-        fvehOwnerService.updateSpaces(ownerId);
         return success(fvehOwnerService.selectFvehOwnerByOwnerId(ownerId));
     }
 
@@ -86,7 +83,7 @@ public class FvehOwnerController extends BaseController
         if (fvehOwnerService.selectFvehOwnerByOwnerIdCard(fvehOwner.getOwnerIdCard()) != null) {
 //            System.out.println("身份证号已存在。");
             // 身份证号码存在
-            throw new UserException("身份证号已存在。");
+            throw new GlobalException("身份证号已存在。");
         } else {
             // 身份证号码不存在
 //            更新车位信息
@@ -102,8 +99,11 @@ public class FvehOwnerController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody FvehOwner fvehOwner)
     {
-//        更新车位信息
-//        fvehOwnerService.updateSpaces(fvehOwner.getOwnerId());
+//        如果返回-1，表示车位数小于已使用车位数---"停车位数不足以停放车辆，已禁用所有车辆停车许可。"
+//        如果返回1，表示车位数大于已使用车位数---"车位信息更新成功。"
+        if(fvehOwnerService.updateFvehOwner(fvehOwner)==-1){
+            return AjaxResult.success("停车位数不足以停放车辆，已禁用所有车辆停车许可。");
+        }
         return toAjax(fvehOwnerService.updateFvehOwner(fvehOwner));
     }
 

@@ -75,11 +75,18 @@
         </foreach>
     </delete>
 
-    <!-- 更新车库余量 -->
-    <update id="increaseRemainingCapacity" parameterType="java.lang.Integer">
+    <!-- 更新车库剩余车位数 -->
+    <update id="updateRemainingCapacity" parameterType="Long">
         UPDATE manage_garage
-        SET remaining_capacity = remaining_capacity + 1
+        SET remaining_capacity = total_capacity - (
+            SELECT COUNT(*)
+            FROM fveh_garage_vehicle
+            WHERE garage_id = #{garageId}
+              AND is_available = 1
+        )
         WHERE garage_id = #{garageId}
     </update>
+
+
 
 </mapper>

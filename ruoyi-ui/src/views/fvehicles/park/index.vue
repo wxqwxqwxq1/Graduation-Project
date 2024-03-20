@@ -58,6 +58,12 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="车位状态" prop="isAvailable">
+        <el-select v-model="queryParams.isAvailable" placeholder="请选择车位状态" clearable @change="handleQuery">
+          <el-option label="允许" value="1"></el-option>
+          <el-option label="禁止" value="0"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -123,14 +129,24 @@
           {{ getTypeText(scope.row.garageType) }}
         </template>
       </el-table-column>
-      <el-table-column label=" 开始时间" align="center" prop="startTime" width="180">
+      <el-table-column label=" 开始时间" align="center" prop="startTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="结束时间" align="center" prop="endTime" width="180">
+      <el-table-column label="结束时间" align="center" prop="endTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="车位状态" align="center" prop="isAvailable" >
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.isAvailable"
+            active-text="开"
+            inactive-text="关"
+            @change="handlePermissionChange(scope.row)"
+          ></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="车主编号" align="center" prop="ownerId" >
@@ -235,6 +251,15 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="车位状态"  prop="isAvailable">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="form.isAvailable"
+              active-text="开"
+              inactive-text="关"
+            />
+          </template>
+        </el-form-item>
         <el-form-item label="开始时间" prop="startTime">
           <el-date-picker clearable
                           v-model="form.startTime"
@@ -294,6 +319,15 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="车位状态"  prop="isAvailable">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="form.isAvailable"
+              active-text="开"
+              inactive-text="关"
+            />
+          </template>
+        </el-form-item>
         <el-form-item label="开始时间" prop="startTime">
           <el-date-picker clearable
                           v-model="form.startTime"
@@ -329,6 +363,7 @@ import {
   querySearchLicensePlate,
   querySearchOwner, querySearchLicensePlateInfo, querySearchGarageLocation
 } from "@/api/fvehicles/park";
+import {updateGarage} from "@/api/manage/garage";
 
 export default {
   name: "Park",
@@ -370,7 +405,8 @@ export default {
         garageId: null,
         garageType: null,
         startTime: null,
-        endTime: null
+        endTime: null,
+        isAvailable: null
       },
       // 表单参数
       form: {},
@@ -406,9 +442,24 @@ export default {
         // 如果车主编号不存在，清空车牌号选择器的选项
         this.licensePlates = [];
       }
-    }
+    },
+    $route(to, from) {
+      // 调用方法重新获取数据
+      this.getList();
+    },
   },
   methods: {
+    // 车位许可开关变化时触发
+    handlePermissionChange(row) {
+      // 这里可以处理开关变化后的逻辑，比如更新数据库
+      // 修改车库许可状态
+      row.isAvailable = row.isAvailable ? 1 : 0;
+      updatePark(row).then(response => {
+        this.$modal.msgSuccess("车库许可已更改");
+        //   重新加载列表
+        this.getList();
+      });
+    },
     // 跳转到车主详情
     goToOwner(ownerId) {
       this.$router.push({ name: 'Owner' , query: { ownerId }} );
@@ -518,6 +569,7 @@ export default {
         this.filteredGarageLocation = [];
       }
     },
+
     onGarageLocationChange(value) {
       // 根据选中的车库位置从后端获取车库信息，并填充到表单中
       this.filteredGarageLocation.forEach(item => {
@@ -539,14 +591,15 @@ export default {
       this.loading = true;
       listPark(this.queryParams).then(response => {
         this.parkList = response.rows;
-        console.log('this.parkList:', this.parkList);
         // 车库编号用0填充到6位
         this.parkList.forEach(item => {
+          item.isAvailable = item.isAvailable === 1;
           item.associationId = item.associationId.toString().padStart(6, "0");
           item.garageId = item.garageId.toString().padStart(6, "0");
           item.ownerId = item.ownerId.toString().padStart(6, "0");
           item.vehicleId = item.vehicleId.toString().padStart(6, "0");
         });
+        console.log('this.parkList:', this.parkList);
         this.total = response.total;
         this.loading = false;
       });
@@ -575,7 +628,8 @@ export default {
         garageId: null,
         garageType: null,
         startTime: null,
-        endTime: null
+        endTime: null,
+        isAvailable: null
       };
       this.resetForm("form");
     },
@@ -603,17 +657,30 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      // console.log('row:', row);
       this.reset();
       this.EditOpen = true;
       const associationId = row.associationId || this.ids
       getPark(associationId).then(response => {
+        // console.log('form:', this.form);
+        // console.log('返回数据:', response.data);
         this.form = response.data;
+        this.form.isAvailable = this.form.isAvailable === 1;
         this.open = true;
-        this.title = "修改车位";
+        this.title = "修改车位"
       });
     },
     /** 提交按钮 */
     submitForm() {
+      // 车位状态转换为 1 or 0
+      this.form.isAvailable = this.form.isAvailable ? 1 : 0;
+      // 如果日期为空，设置为当前日期
+      if (this.form.startTime === null) {
+        this.form.startTime = new Date();
+      }
+      if (this.form.endTime === null) {
+        this.form.endTime = new Date();
+      }
       console.log(this.form);
       this.$refs["form"].validate(valid => {
         if (valid) {

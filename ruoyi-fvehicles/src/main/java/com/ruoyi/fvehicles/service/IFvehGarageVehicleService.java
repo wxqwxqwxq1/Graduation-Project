@@ -6,8 +6,8 @@ import com.ruoyi.fvehicles.domain.FvehGarageVehicle;
 /**
  * 车库-车辆关联Service接口
  *
- * @author ruoyi
- * @date 2024-03-12
+ * @author wxq
+ * @date 2024-03-17
  */
 public interface IFvehGarageVehicleService
 {
@@ -58,4 +58,12 @@ public interface IFvehGarageVehicleService
      * @return 结果
      */
     public int deleteFvehGarageVehicleByAssociationId(Long associationId);
+
+    /**
+     * 根据车辆id更新车辆状态
+     * @param VehicleId
+     * @param isAvailable
+     * @return
+     */
+    int updateFvehGarageVehicleByVehicleId(Long VehicleId, int isAvailable);
 }

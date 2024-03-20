@@ -42,7 +42,7 @@ public class FvehVehicleController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(FvehVehicle fvehVehicle)
     {
-        System.out.println(fvehVehicle.toString());
+//        System.out.println(fvehVehicle.toString());
         startPage();
         List<FvehVehicle> list = fvehVehicleService.selectFvehVehicleList(fvehVehicle);
 //        System.out.println("list: " + list);
@@ -106,7 +106,7 @@ public class FvehVehicleController extends BaseController
     }
 
     /**
-     * 根据车主id查询车辆
+     * 根据车主id查询车辆----只能获取到允许的车辆信息
      */
 //    '/fvehicles/fvehicle/querySearchLicensePlateInfo/'+query,
     @GetMapping("/querySearchLicensePlateInfo/{query}")
@@ -115,6 +115,7 @@ public class FvehVehicleController extends BaseController
         startPage();
         FvehVehicle fvehVehicle = new FvehVehicle();
         fvehVehicle.setOwnerId(Long.parseLong(query));
+        fvehVehicle.setVehiclePermit(1);
         List<FvehVehicle> list = fvehVehicleService.selectFvehVehicleList(fvehVehicle);
         return getDataTable(list);
     }

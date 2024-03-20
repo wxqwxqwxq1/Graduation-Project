@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 车位对象 view_vehicle_parking_info
  *
  * @author wxq
- * @date 2024-03-11
+ * @date 2024-03-17
  */
 public class ViewVehicleParkingInfo extends BaseEntity
 {
@@ -33,8 +33,8 @@ public class ViewVehicleParkingInfo extends BaseEntity
     @Excel(name = "车辆编号")
     private Long vehicleId;
 
-    /** 车主姓名  */
-    @Excel(name = "车主姓名 ")
+    /** 车主姓名 */
+    @Excel(name = "车主姓名")
     private String ownerName;
 
     /** 车主编号 */
@@ -45,21 +45,25 @@ public class ViewVehicleParkingInfo extends BaseEntity
     @Excel(name = "车主电话")
     private String ownerPhone;
 
-    /** 车库位置  */
-    @Excel(name = "车库位置 ")
+    /** 车库位置 */
+    @Excel(name = "车库位置")
     private String garageLocation;
 
     /** 车库编号 */
     @Excel(name = "车库编号")
     private Long garageId;
 
+    /** 车位状态 */
+    @Excel(name = "车位状态")
+    private Integer isAvailable;
+
     /** 车库类型 */
     @Excel(name = "车库类型")
     private String garageType;
 
-    /**  开始时间 */
+    /** 开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = " 开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date startTime;
 
     /** 结束时间 */
@@ -148,6 +152,15 @@ public class ViewVehicleParkingInfo extends BaseEntity
     {
         return garageId;
     }
+    public void setIsAvailable(Integer isAvailable)
+    {
+        this.isAvailable = isAvailable;
+    }
+
+    public Integer getIsAvailable()
+    {
+        return isAvailable;
+    }
     public void setGarageType(String garageType)
     {
         this.garageType = garageType;
@@ -188,6 +201,7 @@ public class ViewVehicleParkingInfo extends BaseEntity
                 .append("ownerPhone", getOwnerPhone())
                 .append("garageLocation", getGarageLocation())
                 .append("garageId", getGarageId())
+                .append("isAvailable", getIsAvailable())
                 .append("garageType", getGarageType())
                 .append("startTime", getStartTime())
                 .append("endTime", getEndTime())
