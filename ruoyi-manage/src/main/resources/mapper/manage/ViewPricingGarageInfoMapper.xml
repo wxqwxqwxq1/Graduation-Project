@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.manage.mapper.ViewPricingGarageInfoMapper">
+
+    <resultMap type="ViewPricingGarageInfo" id="ViewPricingGarageInfoResult">
+        <result property="pricingId"    column="pricing_id"    />
+        <result property="garageId"    column="garage_id"    />
+        <result property="location"    column="location"    />
+        <result property="totalCapacity"    column="total_capacity"    />
+        <result property="type"    column="type"    />
+        <result property="price"    column="price"    />
+        <result property="currency"    column="currency"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+    </resultMap>
+
+    <sql id="selectViewPricingGarageInfoVo">
+        select pricing_id, garage_id, location, total_capacity, type, price, currency, created_at, updated_at from view_pricing_garage_info
+    </sql>
+
+    <select id="selectViewPricingGarageInfoList" parameterType="ViewPricingGarageInfo" resultMap="ViewPricingGarageInfoResult">
+        <include refid="selectViewPricingGarageInfoVo"/>
+        <where>
+            <if test="pricingId != null "> and pricing_id = #{pricingId}</if>
+            <if test="garageId != null "> and garage_id = #{garageId}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+            <if test="totalCapacity != null "> and total_capacity = #{totalCapacity}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="currency != null  and currency != ''"> and currency = #{currency}</if>
+            <if test="createdAt != null "> and created_at = #{createdAt}</if>
+            <if test="updatedAt != null "> and updated_at = #{updatedAt}</if>
+        </where>
+    </select>
+
+    <select id="selectViewPricingGarageInfoByPricingId" parameterType="Long" resultMap="ViewPricingGarageInfoResult">
+        <include refid="selectViewPricingGarageInfoVo"/>
+        where pricing_id = #{pricingId}
+    </select>
+
+    <insert id="insertViewPricingGarageInfo" parameterType="ViewPricingGarageInfo">
+        insert into view_pricing_garage_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pricingId != null">pricing_id,</if>
+            <if test="garageId != null">garage_id,</if>
+            <if test="location != null">location,</if>
+            <if test="totalCapacity != null">total_capacity,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="price != null">price,</if>
+            <if test="currency != null">currency,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pricingId != null">#{pricingId},</if>
+            <if test="garageId != null">#{garageId},</if>
+            <if test="location != null">#{location},</if>
+            <if test="totalCapacity != null">#{totalCapacity},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="price != null">#{price},</if>
+            <if test="currency != null">#{currency},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+        </trim>
+    </insert>
+
+    <update id="updateViewPricingGarageInfo" parameterType="ViewPricingGarageInfo">
+        update view_pricing_garage_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="garageId != null">garage_id = #{garageId},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="totalCapacity != null">total_capacity = #{totalCapacity},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="currency != null">currency = #{currency},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+        </trim>
+        where pricing_id = #{pricingId}
+    </update>
+
+    <delete id="deleteViewPricingGarageInfoByPricingId" parameterType="Long">
+        delete from view_pricing_garage_info where pricing_id = #{pricingId}
+    </delete>
+
+    <delete id="deleteViewPricingGarageInfoByPricingIds" parameterType="String">
+        delete from view_pricing_garage_info where pricing_id in
+        <foreach item="pricingId" collection="array" open="(" separator="," close=")">
+            #{pricingId}
+        </foreach>
+    </delete>
+</mapper>

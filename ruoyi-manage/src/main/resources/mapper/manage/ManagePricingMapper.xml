@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.manage.mapper.ManagePricingMapper">
+
+    <resultMap type="ManagePricing" id="ManagePricingResult">
+        <result property="pricingId"    column="pricing_id"    />
+        <result property="garageId"    column="garage_id"    />
+        <result property="price"    column="price"    />
+        <result property="currency"    column="currency"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+    </resultMap>
+
+    <sql id="selectManagePricingVo">
+        select pricing_id, garage_id, price, currency, created_at, updated_at from manage_pricing
+    </sql>
+
+    <select id="selectManagePricingList" parameterType="ManagePricing" resultMap="ManagePricingResult">
+        <include refid="selectManagePricingVo"/>
+        <where>
+            <if test="garageId != null "> and garage_id = #{garageId}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="currency != null  and currency != ''"> and currency = #{currency}</if>
+            <if test="createdAt != null "> and created_at = #{createdAt}</if>
+            <if test="updatedAt != null "> and updated_at = #{updatedAt}</if>
+        </where>
+    </select>
+
+    <select id="selectManagePricingByPricingId" parameterType="Long" resultMap="ManagePricingResult">
+        <include refid="selectManagePricingVo"/>
+        where pricing_id = #{pricingId}
+    </select>
+
+    <insert id="insertManagePricing" parameterType="ManagePricing" useGeneratedKeys="true" keyProperty="pricingId">
+        insert into manage_pricing
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="garageId != null">garage_id,</if>
+            <if test="price != null">price,</if>
+            <if test="currency != null">currency,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="garageId != null">#{garageId},</if>
+            <if test="price != null">#{price},</if>
+            <if test="currency != null">#{currency},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+        </trim>
+    </insert>
+
+    <update id="updateManagePricing" parameterType="ManagePricing">
+        update manage_pricing
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="garageId != null">garage_id = #{garageId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="currency != null">currency = #{currency},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+        </trim>
+        where pricing_id = #{pricingId}
+    </update>
+
+    <delete id="deleteManagePricingByPricingId" parameterType="Long">
+        delete from manage_pricing where pricing_id = #{pricingId}
+    </delete>
+
+    <delete id="deleteManagePricingByPricingIds" parameterType="String">
+        delete from manage_pricing where pricing_id in
+        <foreach item="pricingId" collection="array" open="(" separator="," close=")">
+            #{pricingId}
+        </foreach>
+    </delete>
+</mapper>

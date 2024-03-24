@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.fvehicles.mapper.FvehOrderMapper">
+
+    <resultMap type="FvehOrder" id="FvehOrderResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="ownerId"    column="owner_id"    />
+        <result property="parkingSpaceCount"    column="parking_space_count"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="orderAmount"    column="order_amount"    />
+        <result property="discountAmount"    column="discount_amount"    />
+        <result property="amountDue"    column="amount_due"    />
+        <result property="orderDate"    column="order_date"    />
+        <result property="paymentMethod"    column="payment_method"    />
+        <result property="paymentStatus"    column="payment_status"    />
+    </resultMap>
+
+    <sql id="selectFvehOrderVo">
+        select order_id, owner_id, parking_space_count, start_time, end_time, order_amount, discount_amount, amount_due, order_date, payment_method, payment_status from fveh_order
+    </sql>
+
+    <select id="selectFvehOrderList" parameterType="FvehOrder" resultMap="FvehOrderResult">
+        <include refid="selectFvehOrderVo"/>
+        <where>
+            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
+            <if test="ownerId != null "> and owner_id = #{ownerId}</if>
+            <if test="parkingSpaceCount != null "> and parking_space_count = #{parkingSpaceCount}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="orderAmount != null "> and order_amount = #{orderAmount}</if>
+            <if test="discountAmount != null "> and discount_amount = #{discountAmount}</if>
+            <if test="amountDue != null "> and amount_due = #{amountDue}</if>
+            <if test="orderDate != null "> and order_date = #{orderDate}</if>
+            <if test="paymentMethod != null  and paymentMethod != ''"> and payment_method = #{paymentMethod}</if>
+            <if test="paymentStatus != null  and paymentStatus != ''"> and payment_status = #{paymentStatus}</if>
+        </where>
+    </select>
+
+    <select id="selectFvehOrderByOrderId" parameterType="String" resultMap="FvehOrderResult">
+        <include refid="selectFvehOrderVo"/>
+        where order_id = #{orderId}
+    </select>
+
+    <insert id="insertFvehOrder" parameterType="FvehOrder">
+        insert into fveh_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="ownerId != null">owner_id,</if>
+            <if test="parkingSpaceCount != null">parking_space_count,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="orderAmount != null">order_amount,</if>
+            <if test="discountAmount != null">discount_amount,</if>
+            <if test="amountDue != null">amount_due,</if>
+            <if test="orderDate != null">order_date,</if>
+            <if test="paymentMethod != null">payment_method,</if>
+            <if test="paymentStatus != null">payment_status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="ownerId != null">#{ownerId},</if>
+            <if test="parkingSpaceCount != null">#{parkingSpaceCount},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="orderAmount != null">#{orderAmount},</if>
+            <if test="discountAmount != null">#{discountAmount},</if>
+            <if test="amountDue != null">#{amountDue},</if>
+            <if test="orderDate != null">#{orderDate},</if>
+            <if test="paymentMethod != null">#{paymentMethod},</if>
+            <if test="paymentStatus != null">#{paymentStatus},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFvehOrder" parameterType="FvehOrder">
+        update fveh_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ownerId != null">owner_id = #{ownerId},</if>
+            <if test="parkingSpaceCount != null">parking_space_count = #{parkingSpaceCount},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="orderAmount != null">order_amount = #{orderAmount},</if>
+            <if test="discountAmount != null">discount_amount = #{discountAmount},</if>
+            <if test="amountDue != null">amount_due = #{amountDue},</if>
+            <if test="orderDate != null">order_date = #{orderDate},</if>
+            <if test="paymentMethod != null">payment_method = #{paymentMethod},</if>
+            <if test="paymentStatus != null">payment_status = #{paymentStatus},</if>
+        </trim>
+        where order_id = #{orderId}
+    </update>
+
+    <delete id="deleteFvehOrderByOrderId" parameterType="String">
+        delete from fveh_order where order_id = #{orderId}
+    </delete>
+
+    <delete id="deleteFvehOrderByOrderIds" parameterType="String">
+        delete from fveh_order where order_id in
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+</mapper>
