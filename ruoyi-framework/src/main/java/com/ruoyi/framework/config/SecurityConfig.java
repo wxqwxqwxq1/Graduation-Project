@@ -1,6 +1,8 @@
 package com.ruoyi.framework.config;
 
+import com.ruoyi.framework.web.service.RoutingUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,8 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
      * 自定义用户认证逻辑
      */
     @Autowired
-    private UserDetailsService userDetailsService;
-    
+    private RoutingUserDetailsService routingUserDetailsService;
+
     /**
      * 认证失败处理类
      */
@@ -100,6 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         permitAllUrl.getUrls().forEach(url -> registry.antMatchers(url).permitAll());
 
         httpSecurity
+                // 通用配置
                 // CSRF禁用，因为不使用session
                 .csrf().disable()
                 // 禁用HTTP响应标头
@@ -119,6 +122,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable();
+
+
         // 添加Logout filter
         httpSecurity.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);
         // 添加JWT filter
@@ -143,6 +148,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception
     {
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+        auth.userDetailsService(routingUserDetailsService)
+                .passwordEncoder(bCryptPasswordEncoder());
     }
+
 }

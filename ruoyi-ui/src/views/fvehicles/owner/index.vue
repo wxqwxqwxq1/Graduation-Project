@@ -282,6 +282,8 @@ export default {
     getList() {
       this.loading = true;
       listOwner(this.queryParams).then(response => {
+        // 打印查询参数
+        console.log(this.queryParams);
         this.ownerList = response.rows;
         // 车主编号用0填充到6位
         this.ownerList.forEach(item => {

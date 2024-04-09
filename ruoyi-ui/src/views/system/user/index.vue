@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <!--部门数据-->
+<!--      部门数据，包含内容树-->
       <el-col :span="4" :xs="24">
         <div class="head-container">
           <el-input
@@ -136,6 +136,7 @@
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </el-row>
 
+        <!--        数据-->
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns[0].visible" />
@@ -473,6 +474,7 @@ export default {
       listUser(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
           this.userList = response.rows;
           this.total = response.total;
+          // console.log(this.userList);
           this.loading = false;
         }
       );

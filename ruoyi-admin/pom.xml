@@ -49,31 +49,12 @@
             <artifactId>ruoyi-framework</artifactId>
         </dependency>
 
-        <!-- 定时任务-->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-quartz</artifactId>
-        </dependency>
-
-        <!-- 代码生成-->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-generator</artifactId>
-        </dependency>
-
-        <!-- 测试模块-->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-test</artifactId>
-        </dependency>
-<!--        固定车辆模块-->
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-fvehicles</artifactId>
             <version>3.8.7</version>
             <scope>compile</scope>
         </dependency>
-<!--        系统管理模块-->
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-manage</artifactId>

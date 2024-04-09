@@ -3,6 +3,8 @@ package com.ruoyi.framework.web.service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.ruoyi.system.domain.SysAppLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -39,6 +41,11 @@ public class SysPermissionService
         {
             roles.add("admin");
         }
+//        判断是否是App用户
+        else if(user.isAppUser())
+        {
+            roles.add("admin");
+        }
         else
         {
             roles.addAll(roleService.selectRolePermissionByUserId(user.getUserId()));
@@ -60,6 +67,10 @@ public class SysPermissionService
         {
             perms.add("*:*:*");
         }
+        if (user.isAppUser())
+        {
+        perms.add("*:*:*");
+        }
         else
         {
             List<SysRole> roles = user.getRoles();
@@ -79,5 +90,12 @@ public class SysPermissionService
             }
         }
         return perms;
+    }
+
+    public Set<String> getAppRolePermission(SysAppLogin user)
+    {
+        // 获取App用户角色相关的权限
+        Set<String> permissions = menuService.selectMenuPermsByRoleId(3L);
+        return permissions;
     }
 }

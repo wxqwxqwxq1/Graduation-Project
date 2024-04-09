@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+
+import com.ruoyi.system.domain.SysAppLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +19,11 @@ import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.framework.web.service.SysPermissionService;
 import com.ruoyi.system.service.ISysMenuService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 登录验证
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -36,7 +40,7 @@ public class SysLoginController
 
     /**
      * 登录方法
-     * 
+     *
      * @param loginBody 登录信息
      * @return 结果
      */
@@ -48,22 +52,26 @@ public class SysLoginController
         String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
                 loginBody.getUuid());
         ajax.put(Constants.TOKEN, token);
-        return ajax;
+         return ajax;
     }
 
     /**
      * 获取用户信息
-     * 
+     *
      * @return 用户信息
      */
     @GetMapping("getInfo")
-    public AjaxResult getInfo()
+    public AjaxResult getInfo(HttpServletRequest request)  // 注入HttpServletRequest对象以访问请求头
     {
+        String clientType = request.getHeader("Client-Type");  // 从请求头中获取Client-Type
+
         SysUser user = SecurityUtils.getLoginUser().getUser();
-        // 角色集合
-        Set<String> roles = permissionService.getRolePermission(user);
-        // 权限集合
-        Set<String> permissions = permissionService.getMenuPermission(user);
+        Set<String> roles;
+        Set<String> permissions;
+
+        roles = permissionService.getRolePermission(user);
+        permissions = permissionService.getMenuPermission(user);
+
         AjaxResult ajax = AjaxResult.success();
         ajax.put("user", user);
         ajax.put("roles", roles);
@@ -73,7 +81,7 @@ public class SysLoginController
 
     /**
      * 获取路由信息
-     * 
+     *
      * @return 路由信息
      */
     @GetMapping("getRouters")

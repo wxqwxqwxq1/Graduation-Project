@@ -1,6 +1,8 @@
 package com.ruoyi.framework.web.service;
 
 import java.util.concurrent.TimeUnit;
+
+import com.ruoyi.system.domain.SysAppLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -83,4 +85,49 @@ public class SysPasswordService
             redisCache.deleteObject(getCacheKey(loginName));
         }
     }
+
+    //    appuser登录密码校验
+    public void Appvalidate(SysAppLogin user)
+    {
+        Authentication usernamePasswordAuthenticationToken = AuthenticationContextHolder.getContext();
+        String username = usernamePasswordAuthenticationToken.getName();
+        String password = usernamePasswordAuthenticationToken.getCredentials().toString();
+
+        Integer retryCount = redisCache.getCacheObject(getCacheKey(username));
+
+        if (retryCount == null)
+        {
+            retryCount = 0;
+        }
+
+        if (retryCount >= Integer.valueOf(maxRetryCount).intValue())
+        {
+            throw new UserPasswordRetryLimitExceedException(maxRetryCount, lockTime);
+        }
+
+        if (!AppUserMatches(user, password))
+        {
+            retryCount = retryCount + 1;
+            redisCache.setCacheObject(getCacheKey(username), retryCount, lockTime, TimeUnit.MINUTES);
+            throw new UserPasswordNotMatchException();
+        }
+        else
+        {
+            clearLoginRecordCache(username);
+        }
+    }
+
+    public boolean AppUserMatches(SysAppLogin user, String rawPassword)
+    {
+        return SecurityUtils.matchesPassword(rawPassword, user.getPassWord());
+    }
+
+    public void clearAppLoginRecordCache(String loginName)
+    {
+        if (redisCache.hasKey(getCacheKey(loginName)))
+        {
+            redisCache.deleteObject(getCacheKey(loginName));
+        }
+    }
+
 }

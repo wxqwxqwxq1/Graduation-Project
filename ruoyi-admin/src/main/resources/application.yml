@@ -67,9 +67,9 @@ spring:
       enabled: true
   # redis 配置
   redis:
-    # 地址 107.174.145.151
+    # 地址 8.130.150.109
 #    host: localhost
-    host: 107.174.145.151
+    host: 8.130.150.109
     # 端口，默认为6379
     port: 6379
     # 数据库索引

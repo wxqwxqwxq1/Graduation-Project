@@ -1,5 +1,7 @@
 package com.ruoyi.framework.web.service;
 
+import com.ruoyi.system.domain.SysAppLogin;
+import com.ruoyi.system.service.ISysAppLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +24,14 @@ import java.util.Set;
  *
  * @author ruoyi
  */
-@Service("userDetailsServiceImpl")
-public class UserDetailsServiceImpl implements UserDetailsService
+@Service("appUserDetailsServiceImpl")
+public class AppUserDetailsServiceImpl implements UserDetailsService
 {
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
     @Autowired
-    private ISysUserService userService;
-    
+    private ISysAppLoginService appLoginService;
+
     @Autowired
     private SysPasswordService passwordService;
 
@@ -39,37 +41,37 @@ public class UserDetailsServiceImpl implements UserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
-//        判断是否是app用户
-        SysUser user = userService.selectUserByUserName(username);
+//        根据用户名查询
+        SysAppLogin user = appLoginService.selectAppLoginByUserName(username);
+//        SysUser user = userService.selectUserByUserName(username);
         if (StringUtils.isNull(user))
         {
             log.info("登录用户：{} 不存在.", username);
             throw new ServiceException(MessageUtils.message("user.not.exists"));
         }
-        else if (UserStatus.DELETED.getCode().equals(user.getDelFlag()))
-        {
-            log.info("登录用户：{} 已被删除.", username);
-            throw new ServiceException(MessageUtils.message("user.password.delete"));
-        }
-        else if (UserStatus.DISABLE.getCode().equals(user.getStatus()))
-        {
-            log.info("登录用户：{} 已被停用.", username);
-            throw new ServiceException(MessageUtils.message("user.blocked"));
-        }
 
-        passwordService.validate(user);
+        passwordService.Appvalidate(user);
 
         return createLoginUser(user);
     }
 
-    public UserDetails createLoginUser(SysUser user)
+    public UserDetails createLoginUser(SysAppLogin sysAppUser)
     {
-        System.out.println("Web:");
-        System.out.println(user.toString());
-        System.out.println(new LoginUser(user.getUserId(), user.getDeptId(), user, permissionService.getMenuPermission(user)).toString());
-        // 确保返回的权限是正确的
-        Set<String> permissions = permissionService.getMenuPermission(user);
-        System.out.println("Permissions: " + permissions);
-        return new LoginUser(user.getUserId(), user.getDeptId(), user, permissionService.getMenuPermission(user));
+//        public SysAppLogin(Long ownerId, String userName, String passWord, String ownerPhone)
+//        public LoginUser(Long userId, Long deptId, SysUser user, Set<String> permissions)
+        SysUser sysUser = new SysUser(1L);
+//        sysUser.setUserId(1L);
+        sysUser.setDeptId(103L);
+        sysUser.setRoleId(1L);
+        sysUser.setUserName(sysAppUser.getUserName());
+        sysUser.setPassword(sysAppUser.getPassWord());
+        sysUser.setPhonenumber(sysAppUser.getOwnerPhone());
+        // 获取用户权限集合
+        Set<String> permissions = permissionService.getAppRolePermission(sysAppUser);
+        System.out.println(permissions);
+
+        LoginUser loginUser = new LoginUser(1L, 1L ,sysUser, permissions);
+        System.out.println(loginUser.toString());
+        return new LoginUser(1L, 1L ,sysUser, permissions);
     }
 }

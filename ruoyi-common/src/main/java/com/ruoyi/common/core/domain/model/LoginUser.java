@@ -88,6 +88,11 @@ public class LoginUser implements UserDetails
         this.user = user;
         this.permissions = permissions;
     }
+    public LoginUser(Long userId, Set<String> permissions)
+    {
+        this.userId = userId;
+        this.permissions = permissions;
+    }
 
     public Long getUserId()
     {
@@ -97,6 +102,23 @@ public class LoginUser implements UserDetails
     public void setUserId(Long userId)
     {
         this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginUser{" +
+                "userId=" + userId +
+                ", deptId=" + deptId +
+                ", token='" + token + '\'' +
+                ", loginTime=" + loginTime +
+                ", expireTime=" + expireTime +
+                ", ipaddr='" + ipaddr + '\'' +
+                ", loginLocation='" + loginLocation + '\'' +
+                ", browser='" + browser + '\'' +
+                ", os='" + os + '\'' +
+                ", permissions=" + permissions +
+                ", user=" + user +
+                '}';
     }
 
     public Long getDeptId()

@@ -119,6 +119,15 @@ public class SysUser extends BaseEntity
         return userId != null && 1L == userId;
     }
 
+//    根据部门id判断是否是app用户
+    public static boolean isAppUser(Long deptId)
+    {
+        return deptId != null && 1L == deptId;
+    }
+    public boolean isAppUser()
+    {
+        return isAppUser(this.deptId);
+    }
     public Long getDeptId()
     {
         return deptId;

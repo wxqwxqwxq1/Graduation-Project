@@ -135,34 +135,6 @@ export const dynamicRoutes = [
       }
     ]
   },
-  {
-    path: '/monitor/job-log',
-    component: Layout,
-    hidden: true,
-    permissions: ['monitor:job:list'],
-    children: [
-      {
-        path: 'index/:jobId(\\d+)',
-        component: () => import('@/views/monitor/job/log'),
-        name: 'JobLog',
-        meta: { title: '调度日志', activeMenu: '/monitor/job' }
-      }
-    ]
-  },
-  {
-    path: '/tool/gen-edit',
-    component: Layout,
-    hidden: true,
-    permissions: ['tool:gen:edit'],
-    children: [
-      {
-        path: 'index/:tableId(\\d+)',
-        component: () => import('@/views/tool/gen/editTable'),
-        name: 'GenEdit',
-        meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
-      }
-    ]
-  },
   // 固定车辆路由--添加车辆管理和车主管理的路由
   {
     path: '/fvehicles',
